@@ -1,0 +1,15 @@
+package guru.springframework.petclinic.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class VetController {
+
+    @RequestMapping({"/vets", "/vets/index", "/vets/index.html"})
+    public String listVets(){
+
+        // This is location of the thymeleaf template
+        return "vets/index";
+    }
+}
