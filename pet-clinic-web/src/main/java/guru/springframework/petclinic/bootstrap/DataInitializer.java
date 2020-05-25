@@ -1,6 +1,7 @@
 package guru.springframework.petclinic.bootstrap;
 
 import guru.springframework.petclinic.model.Owner;
+import guru.springframework.petclinic.model.Pet;
 import guru.springframework.petclinic.model.PetType;
 import guru.springframework.petclinic.model.Vet;
 import guru.springframework.petclinic.services.OwnerService;
@@ -8,6 +9,8 @@ import guru.springframework.petclinic.services.PetTypeService;
 import guru.springframework.petclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 // CommandLineRunner is a Spring Boot specific class
 @Component
@@ -29,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
 
         PetType dog = new PetType();
         dog.setName("dog");
-        PetType savedPetDog = petTypeService.save(dog);
+        PetType savedDogPetType = petTypeService.save(dog);
 
         PetType cat = new PetType();
         cat.setName("cat");
@@ -38,14 +41,34 @@ public class DataInitializer implements CommandLineRunner {
         Owner owner1 = new Owner();
         owner1.setFirstName("Larry");
         owner1.setLastName("Barold");
-
+        owner1.setAddress("123 Mess Off Lane");
+        owner1.setCity("New Bedford");
+        owner1.setTelephone("555-444-1234");
         ownerService.save(owner1);
+
+        Pet larryPet = new Pet();
+        larryPet.setPetType(savedDogPetType);
+        larryPet.setOwner(owner1);
+        larryPet.setBirthDate(LocalDate.now());
+        larryPet.setName("Bubsie");
+        owner1.getPets().add(larryPet);
+
+
 
         Owner owner2 = new Owner();
         owner2.setFirstName("Barry");
         owner2.setLastName("Larold");
-
+        owner2.setAddress("409 Huttleston Ave");
+        owner2.setCity("Fairhaven");
+        owner2.setTelephone("555-123-3333");
         ownerService.save(owner2);
+
+        Pet barryPet = new Pet();
+        barryPet.setPetType(savedCatPetType);
+        barryPet.setOwner(owner2);
+        barryPet.setBirthDate(LocalDate.now());
+        barryPet.setName("Kitty");
+        owner1.getPets().add(barryPet);
 
         System.out.println("Loaded owners.......");
 
