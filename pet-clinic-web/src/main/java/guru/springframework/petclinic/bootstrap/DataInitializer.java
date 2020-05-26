@@ -1,11 +1,9 @@
 package guru.springframework.petclinic.bootstrap;
 
-import guru.springframework.petclinic.model.Owner;
-import guru.springframework.petclinic.model.Pet;
-import guru.springframework.petclinic.model.PetType;
-import guru.springframework.petclinic.model.Vet;
+import guru.springframework.petclinic.model.*;
 import guru.springframework.petclinic.services.OwnerService;
 import guru.springframework.petclinic.services.PetTypeService;
+import guru.springframework.petclinic.services.SpecialtyService;
 import guru.springframework.petclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,17 +17,31 @@ public class DataInitializer implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
     private final PetTypeService petTypeService;
+    private final SpecialtyService specialtyService;
 
-    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService) {
+    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.specialtyService = specialtyService;
     }
 
 
     @Override
     public void run(String... args) throws Exception {
 
+        /*
+        You don't need the data to load every time you
+        run the program.  This says if the data already
+        exists then don't load it again
+         */
+        int count = petTypeService.findAll().size();
+        if(count == 0){
+            loadData();
+        }
+    }
+
+    private void loadData() {
         PetType dog = new PetType();
         dog.setName("dog");
         PetType savedDogPetType = petTypeService.save(dog);
@@ -37,6 +49,26 @@ public class DataInitializer implements CommandLineRunner {
         PetType cat = new PetType();
         cat.setName("cat");
         PetType savedCatPetType = petTypeService.save(cat);
+
+        Specialty radiology = new Specialty();
+        radiology.setDescription("Radiology");
+        /*
+        The next line of code ensures you are getting the
+        saved version which has an Id value from the map
+        service.  "Specialty radiology" has no Id and
+        can't be persisted.  This is how the map service
+        is acting like Spring Data JPA.
+
+         */
+        Specialty savedRadiology = specialtyService.save(radiology);
+
+        Specialty surgery = new Specialty();
+        surgery.setDescription("Surgery");
+        Specialty savedSurgery = specialtyService.save(surgery);
+
+        Specialty dentistry = new Specialty();
+        dentistry.setDescription("Dentistry");
+        Specialty savedDentistry = specialtyService.save(dentistry);
 
         Owner owner1 = new Owner();
         owner1.setFirstName("Larry");
@@ -52,8 +84,6 @@ public class DataInitializer implements CommandLineRunner {
         larryPet.setBirthDate(LocalDate.now());
         larryPet.setName("Bubsie");
         owner1.getPets().add(larryPet);
-
-
 
         Owner owner2 = new Owner();
         owner2.setFirstName("Barry");
@@ -75,18 +105,17 @@ public class DataInitializer implements CommandLineRunner {
         Vet vet1 = new Vet();
         vet1.setFirstName("Scary");
         vet1.setLastName("Terry");
+        vet1.getSpecialties().add(savedRadiology);
 
         vetService.save(vet1);
 
         Vet vet2 = new Vet();
         vet2.setFirstName("Scary");
         vet2.setLastName("Brandon");
+        vet2.getSpecialties().add(savedDentistry);
 
         System.out.println("Loaded Vets............");
 
         vetService.save(vet2);
-
-
-
     }
 }
