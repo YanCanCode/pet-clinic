@@ -1,10 +1,7 @@
 package guru.springframework.petclinic.bootstrap;
 
 import guru.springframework.petclinic.model.*;
-import guru.springframework.petclinic.services.OwnerService;
-import guru.springframework.petclinic.services.PetTypeService;
-import guru.springframework.petclinic.services.SpecialtyService;
-import guru.springframework.petclinic.services.VetService;
+import guru.springframework.petclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +15,14 @@ public class DataInitializer implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialtyService specialtyService;
+    private final VisitService visitService;
 
-    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService) {
+    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService, VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialtyService = specialtyService;
+        this.visitService = visitService;
     }
 
 
@@ -99,6 +98,11 @@ public class DataInitializer implements CommandLineRunner {
         barryPet.setBirthDate(LocalDate.now());
         barryPet.setName("Kitty");
         owner1.getPets().add(barryPet);
+
+        Visit catVisit = new Visit();
+        catVisit.setPet(barryPet);
+        catVisit.setLocalDate(LocalDate.now());
+        catVisit.setDescription("Climbs curtains");
 
         System.out.println("Loaded owners.......");
 
