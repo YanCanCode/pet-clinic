@@ -16,13 +16,15 @@ public class DataInitializer implements CommandLineRunner {
     private final PetTypeService petTypeService;
     private final SpecialtyService specialtyService;
     private final VisitService visitService;
+    private final PetService petService;
 
-    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService, VisitService visitService) {
+    public DataInitializer(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService, VisitService visitService, PetService petService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialtyService = specialtyService;
         this.visitService = visitService;
+        this.petService = petService;
     }
 
 
